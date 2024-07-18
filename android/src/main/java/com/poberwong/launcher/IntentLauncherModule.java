@@ -115,7 +115,6 @@ public class IntentLauncherModule extends ReactContextBaseJavaModule implements 
         if (packageName != null) {
             Intent launchIntent = this.reactContext.getPackageManager().getLaunchIntentForPackage(packageName);
             if (launchIntent != null) {
-//                makePhoneCall("0847522314");
                 // Uncomment the line below if you want to start the app as well
                  getReactApplicationContext().startActivity(launchIntent);
                 promise.resolve(true);

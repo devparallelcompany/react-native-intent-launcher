@@ -15,18 +15,20 @@ yarn add https://github.com/devparallelcompany/react-native-intent-launcher.git
 
 ## Make A Phone Call
 ```javascript
-const granted = await PermissionsAndroid.request(
-  PermissionsAndroid.PERMISSIONS.CALL_PHONE,
-  {
-    title: "Call Phone Permission",
-    message: "This app needs access to make phone calls.",
-    buttonNeutral: "Ask Me Later",
-    buttonNegative: "Cancel",
-    buttonPositive: "OK"
-  }
-);
+const makeAPhoneCall = async () => {
+  const granted = await PermissionsAndroid.request(
+    PermissionsAndroid.PERMISSIONS.CALL_PHONE,
+    {
+      title: "Call Phone Permission",
+      message: "This app needs access to make phone calls.",
+      buttonNeutral: "Ask Me Later",
+      buttonNegative: "Cancel",
+      buttonPositive: "OK"
+    }
+  );
 
-IntentLauncher.makePhoneCall('1234566789')
+  IntentLauncher.makePhoneCall("123456789");
+}
 ```
 
 ## Legacy Usage

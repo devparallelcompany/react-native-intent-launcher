@@ -35,7 +35,7 @@ IntentLauncher.startAppByPackageName('wtf.swell')
   })
   .catch((error) => console.warn('startAppByPackageName: could not open', error));
 ...
-```
+``` 
 
 ## Make Phone Call
 ```javascript
@@ -48,8 +48,9 @@ const granted = await PermissionsAndroid.request(
     buttonNegative: "Cancel",
     buttonPositive: "OK"
   }
-  );
-IntentLauncher.makePhoneCall('1234566789');
+);
+
+IntentLauncher.makePhoneCall('1234566789')
 ```
 
 ## Properties

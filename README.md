@@ -12,6 +12,11 @@ You can call native function `startActivity` in react-native to do something wit
 1. `npm install react-native-intent-launcher` 
 2. `react-native link react-native-intent-launcher`
 
+## Installation
+```
+  yarn add https://github.com/devparallelcompany/react-native-intent-launcher.git   
+```
+
 ## Usage
 ```javascript
 import IntentLauncher, { IntentConstant } from 'react-native-intent-launcher'

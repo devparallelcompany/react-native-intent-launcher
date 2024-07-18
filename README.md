@@ -39,6 +39,16 @@ IntentLauncher.startAppByPackageName('wtf.swell')
 
 ## Make Phone Call
 ```javascript
+const granted = await PermissionsAndroid.request(
+  PermissionsAndroid.PERMISSIONS.CALL_PHONE,
+  {
+    title: "Call Phone Permission",
+    message: "This app needs access to make phone calls.",
+    buttonNeutral: "Ask Me Later",
+    buttonNegative: "Cancel",
+    buttonPositive: "OK"
+  }
+  );
 IntentLauncher.makePhoneCall('1234566789');
 ```
 

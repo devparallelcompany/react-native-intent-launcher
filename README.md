@@ -6,18 +6,30 @@ call native function `startActivity` in react-native
 
 ## Description
 You can call native function `startActivity` in react-native to do something with `Intent` which can only be solved with android native code
-
-## Installation
-
-1. `npm install react-native-intent-launcher` 
-2. `react-native link react-native-intent-launcher`
+and make a phone call immediately
 
 ## Installation
 ```
-  yarn add https://github.com/devparallelcompany/react-native-intent-launcher.git   
+yarn add https://github.com/devparallelcompany/react-native-intent-launcher.git   
 ```
 
-## Usage
+## Make A Phone Call
+```javascript
+const granted = await PermissionsAndroid.request(
+  PermissionsAndroid.PERMISSIONS.CALL_PHONE,
+  {
+    title: "Call Phone Permission",
+    message: "This app needs access to make phone calls.",
+    buttonNeutral: "Ask Me Later",
+    buttonNegative: "Cancel",
+    buttonPositive: "OK"
+  }
+);
+
+IntentLauncher.makePhoneCall('1234566789')
+```
+
+## Legacy Usage
 ```javascript
 import IntentLauncher, { IntentConstant } from 'react-native-intent-launcher'
 ...
@@ -41,22 +53,6 @@ IntentLauncher.startAppByPackageName('wtf.swell')
   .catch((error) => console.warn('startAppByPackageName: could not open', error));
 ...
 ``` 
-
-## Make Phone Call
-```javascript
-const granted = await PermissionsAndroid.request(
-  PermissionsAndroid.PERMISSIONS.CALL_PHONE,
-  {
-    title: "Call Phone Permission",
-    message: "This app needs access to make phone calls.",
-    buttonNeutral: "Ask Me Later",
-    buttonNegative: "Cancel",
-    buttonPositive: "OK"
-  }
-);
-
-IntentLauncher.makePhoneCall('1234566789')
-```
 
 ## Properties
 * `action` String

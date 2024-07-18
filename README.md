@@ -37,6 +37,11 @@ IntentLauncher.startAppByPackageName('wtf.swell')
 ...
 ```
 
+## Make Phone Call
+```javascript
+IntentLauncher.makePhoneCall('1234566789');
+```
+
 ## Properties
 * `action` String
 * `data` String

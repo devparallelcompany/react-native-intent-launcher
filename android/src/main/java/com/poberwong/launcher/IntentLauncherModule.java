@@ -7,6 +7,9 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
@@ -16,9 +19,10 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 
-/**
- * Created by poberwong on 16/6/30.
- */
+import static android.Manifest.permission.CALL_PHONE;
+
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+
 public class IntentLauncherModule extends ReactContextBaseJavaModule implements ActivityEventListener {
     private static final int REQUEST_CODE = 12;
     private static final String ATTR_ACTION = "action";
@@ -29,8 +33,10 @@ public class IntentLauncherModule extends ReactContextBaseJavaModule implements 
     private static final String ATTR_FLAGS = "flags";
     private static final String ATTR_PACKAGE_NAME = "packageName";
     private static final String ATTR_CLASS_NAME = "className";
-    Promise promise;
-    ReactApplicationContext reactContext;
+    private static final int REQUEST_CALL_PERMISSION = 1;
+
+    private Promise promise;
+    private ReactApplicationContext reactContext;
 
     public IntentLauncherModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -43,11 +49,6 @@ public class IntentLauncherModule extends ReactContextBaseJavaModule implements 
         return "IntentLauncher";
     }
 
-    /**
-     * 选用方案
-     * intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-     * getReactApplicationContext().startActivity(intent);
-     */
     @ReactMethod
     public void startActivity(ReadableMap params, final Promise promise) {
         this.promise = promise;
@@ -65,8 +66,6 @@ public class IntentLauncherModule extends ReactContextBaseJavaModule implements 
         if (params.hasKey(ATTR_ACTION)) {
             intent.setAction(params.getString(ATTR_ACTION));
         }
-        // setting data resets type; and setting type resets data; if you have both, you need to set them at the same time
-        // https://developer.android.com/guide/components/intents-filters.html#Types (see 'Data' section)
         if (params.hasKey(ATTR_DATA) && params.hasKey(ATTR_TYPE)) {
             intent.setDataAndType(Uri.parse(params.getString(ATTR_DATA)), params.getString(ATTR_TYPE));
         } else {
@@ -86,7 +85,7 @@ public class IntentLauncherModule extends ReactContextBaseJavaModule implements 
         if (params.hasKey(ATTR_CATEGORY)) {
             intent.addCategory(params.getString(ATTR_CATEGORY));
         }
-        getReactApplicationContext().startActivityForResult(intent, REQUEST_CODE, null); // 暂时使用当前应用的任务栈
+        getReactApplicationContext().startActivityForResult(intent, REQUEST_CODE, null);
     }
 
     @ReactMethod
@@ -101,11 +100,24 @@ public class IntentLauncherModule extends ReactContextBaseJavaModule implements 
     }
 
     @ReactMethod
+    private void makePhoneCall(String phoneNumber) {
+        if (ContextCompat.checkSelfPermission(getCurrentActivity(), CALL_PHONE) != PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getCurrentActivity(), new String[]{CALL_PHONE}, REQUEST_CALL_PERMISSION);
+        } else {
+            Intent callIntent = new Intent(Intent.ACTION_CALL);
+            callIntent.setData(Uri.parse("tel:" + phoneNumber));
+            getCurrentActivity().startActivity(callIntent);
+        }
+    }
+
+    @ReactMethod
     public void startAppByPackageName(String packageName, final Promise promise) {
         if (packageName != null) {
             Intent launchIntent = this.reactContext.getPackageManager().getLaunchIntentForPackage(packageName);
             if (launchIntent != null) {
-                getReactApplicationContext().startActivity(launchIntent);
+//                makePhoneCall("0847522314");
+                // Uncomment the line below if you want to start the app as well
+                 getReactApplicationContext().startActivity(launchIntent);
                 promise.resolve(true);
                 return;
             } else {
